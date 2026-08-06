@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <title>TFL - Next train leaving:</title>
+</head>
+<body>
+<div class="container-fluid">
+    <m-3>
+    <table class="table">
+    <thead>
+        <tr>
+        <th scope="col">#</th>
+        <th scope="col">Station</th>
+        <th scope="col">Platform</th>
+        <th scope="col">Tube Line</th>
+        <th scope="col">Time until Departure (mins)</th>
+        <th scope="col">Final Destination</th>
+        </tr>
+    </thead>
+
+    {% for result in results %}
+    <tbody>
+        <tr>
+        <th scope="row">{{ loop.index }}</th>
+        <td>{{ result.station }}</td>
+        <td>{{ result.platform }}</td>
+
+        <td class="{{ line_classes.get(result.tubeLine, '') }}">{{ result.tubeLine }}</td>
+
+        <td>{{ result.timeUntilDeparture }}</td>
+        <td>{{ result.destination }}</td>
+        </tr>
+    {% endfor %} 
+    
+    </tbody>
+    </table>
+
+<!---
+    {% for result in results %}
+        <p class="fw-light">The next train will leave from {{ result.station }} along the {{ result.tubeLine }} line from {{ result.platform }} in {{ result.timeUntilDeparture }} minutes</p>
+        {% endfor %}    
+
+    
+
+    {% for result in results %}
+        <h2>Station: {{ result.station }}</h2>
+        <h2>Platform: {{ result.platform }}</h2>
+        <h2>Tube Line: {{ result.tubeLine }}</h2>
+        <h2>Time until departure: {{ result.timeUntilDeparture }} minutes</h2>
+        <h2>Final destination: {{ result.destination }}</h2>
+        <h2>The next train will leave from {{ result.station }} along the {{ result.tubeLine }} line from {{ result.platform }} in {{ result.timeUntilDeparture }} minutes</h2>
+    {% endfor %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+-->
+
+<a href="{{ url_for('home')}}">
+        <button type="button" class="btn btn-primary btn-lg">Enter another station</button>
+        </a>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+</body>
+
+</html>
+
+<!--  station=departures[num]['stationName']
+    tubeLine=departures[num]['lineName']
+    platform=departures[num]['platformName']
+    destination=departures[num]['destinationName']
+    timeUntilDeparture  
+    
+    -->

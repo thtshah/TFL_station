@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Image Display</title>
+    <!-- Bootstrap CSS -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <div class="mx-auto" style="width: 500px;">
+     <h1>TFL - Station Finder:</h1>
+
+</head>
+<body class="bg-light">
+    <div class="container-fluid"></div>
+    <div class="mx-auto" style="width: 500px;">
+        <form action="{{ url_for('departures')}}" method="post">
+                <!--
+            <div class="form-control">
+                <label for="stationName" >Please enter your station:</label>
+                <input 
+                    type="text" 
+                    class="form-control"
+                    id="stationName" 
+                    name="stationName" 
+                    placeholder="e.g. King's Cross & St Pancras"
+                >
+            </div>
+                -->
+
+    <label for="stationName" class="form-label">Please enter your station:</label>
+    <input name=stationName class="form-control" list="stationOptions" id="stationName" placeholder="Type to search...">
+    <datalist id="stationOptions">
+
+        <option value="Acton Town">
+        <option value="Aldgate">
+        <option value="Aldgate East">
+        <option value="Alperton">
+        <option value="Amersham">
+        <option value="Angel">
+        <option value="Archway">
+        <option value="Arnos Grove">
+        <option value="Arsenal">
+        <option value="Baker Street">
+        <option value="Balham">
+        <option value="Bank">
+        <option value="Barbican">
+        <option value="Barking">
+        <option value="Barkingside">
+        <option value="Barons Court">
+        <option value="Battersea Power Station">
+        <option value="Bayswater">
+        <option value="Becontree">
+        <option value="Belsize Park">
+        <option value="Bermondsey">
+        <option value="Bethnal Green">
+        <option value="Blackfriars">
+        <option value="Blackhorse Road">
+        <option value="Bond Street">
+        <option value="Borough">
+        <option value="Boston Manor">
+        <option value="Bounds Green">
+        <option value="Bow Road">
+        <option value="Brent Cross">
+        <option value="Brixton">
+        <option value="Bromley-by-Bow">
+        <option value="Buckhurst Hill">
+        <option value="Burnt Oak">
+        <option value="Caledonian Road">
+        <option value="Camden Town">
+        <option value="Canada Water">
+        <option value="Canary Wharf">
+        <option value="Canning Town">
+        <option value="Cannon Street">
+        <option value="Canons Park">
+        <option value="Chalfont & Latimer">
+        <option value="Chalk Farm">
+        <option value="Chancery Lane">
+        <option value="Charing Cross">
+        <option value="Chesham">
+        <option value="Chigwell">
+        <option value="Chiswick Park">
+        <option value="Chorleywood">
+        <option value="Clapham Common">
+        <option value="Clapham North">
+        <option value="Clapham South">
+        <option value="Cockfosters">
+        <option value="Colindale">
+        <option value="Colliers Wood">
+        <option value="Covent Garden">
+        <option value="Croxley">
+        <option value="Dagenham East">
+        <option value="Dagenham Heathway">
+        <option value="Debden">
+        <option value="Dollis Hill">
+        <option value="Ealing Broadway">
+        <option value="Ealing Common">
+        <option value="Earl's Court">
+        <option value="East Acton">
+        <option value="East Finchley">
+        <option value="East Ham">
+        <option value="East Putney">
+        <option value="Eastcote">
+        <option value="Edgware">
+        <option value="Edgware Road">
+        <option value="Elephant & Castle">
+        <option value="Elm Park">
+        <option value="Embankment">
+        <option value="Epping">
+        <option value="Euston">
+        <option value="Euston Square">
+        <option value="Fairlop">
+        <option value="Farringdon">
+        <option value="Finchley Central">
+        <option value="Finchley Road">
+        <option value="Finsbury Park">
+        <option value="Fulham Broadway">
+        <option value="Gants Hill">
+        <option value="Gloucester Road">
+        <option value="Golders Green">
+        <option value="Goldhawk Road">
+        <option value="Goodge Street">
+        <option value="Grange Hill">
+        <option value="Great Portland Street">
+        <option value="Green Park">
+        <option value="Greenford">
+        <option value="Gunnersbury">
+        <option value="Hainault">
+        <option value="Hammersmith">
+        <option value="Hampstead">
+        <option value="Hanger Lane">
+        <option value="Harlesden">
+        <option value="Harrow & Wealdstone">
+        <option value="Harrow-on-the-Hill">
+        <option value="Hatton Cross">
+        <option value="Heathrow Terminal 4">
+        <option value="Heathrow Terminal 5">
+        <option value="Heathrow Terminals 2 & 3">
+        <option value="Hendon Central">
+        <option value="High Barnet">
+        <option value="High Street Kensington">
+        <option value="Highbury & Islington">
+        <option value="Highgate">
+        <option value="Hillingdon">
+        <option value="Holborn">
+        <option value="Holland Park">
+        <option value="Holloway Road">
+        <option value="Hornchurch">
+        <option value="Hounslow Central">
+        <option value="Hounslow East">
+        <option value="Hounslow West">
+        <option value="Hyde Park Corner">
+        <option value="Ickenham">
+        <option value="Kennington">
+        <option value="Kensal Green">
+        <option value="Kensington (Olympia)">
+        <option value="Kentish Town">
+        <option value="Kenton">
+        <option value="Kew Gardens">
+        <option value="Kilburn">
+        <option value="Kilburn Park">
+        <option value="King's Cross St Pancras">
+        <option value="Kingsbury">
+        <option value="Knightsbridge">
+        <option value="Ladbroke Grove">
+        <option value="Lambeth North">
+        <option value="Lancaster Gate">
+        <option value="Latimer Road">
+        <option value="Leicester Square">
+        <option value="Leyton">
+        <option value="Leytonstone">
+        <option value="Liverpool Street">
+        <option value="London Bridge">
+        <option value="Loughton">
+        <option value="Maida Vale">
+        <option value="Manor House">
+        <option value="Mansion House">
+        <option value="Marble Arch">
+        <option value="Marylebone">
+        <option value="Mile End">
+        <option value="Mill Hill East">
+        <option value="Monument">
+        <option value="Moor Park">
+        <option value="Moorgate">
+        <option value="Morden">
+        <option value="Mornington Crescent">
+        <option value="Neasden">
+        <option value="Newbury Park">
+        <option value="Nine Elms">
+        <option value="North Acton">
+        <option value="North Ealing">
+        <option value="North Greenwich">
+        <option value="North Harrow">
+        <option value="North Wembley">
+        <option value="Northfields">
+        <option value="Northolt">
+        <option value="Northwick Park">
+        <option value="Northwood">
+        <option value="Northwood Hills">
+        <option value="Notting Hill Gate">
+        <option value="Oakwood">
+        <option value="Old Street">
+        <option value="Osterley">
+        <option value="Oval">
+        <option value="Oxford Circus">
+        <option value="Paddington">
+        <option value="Park Royal">
+        <option value="Parsons Green">
+        <option value="Perivale">
+        <option value="Piccadilly Circus">
+        <option value="Pimlico">
+        <option value="Pinner">
+        <option value="Plaistow">
+        <option value="Preston Road">
+        <option value="Putney Bridge">
+        <option value="Queen's Park">
+        <option value="Queensbury">
+        <option value="Queensway">
+        <option value="Ravenscourt Park">
+        <option value="Rayners Lane">
+        <option value="Redbridge">
+        <option value="Regent's Park">
+        <option value="Richmond">
+        <option value="Rickmansworth">
+        <option value="Roding Valley">
+        <option value="Royal Oak">
+        <option value="Ruislip">
+        <option value="Ruislip Gardens">
+        <option value="Ruislip Manor">
+        <option value="Russell Square">
+        <option value="Seven Sisters">
+        <option value="Shepherd's Bush">
+        <option value="Shepherd's Bush Market">
+        <option value="Sloane Square">
+        <option value="Snaresbrook">
+        <option value="South Ealing">
+        <option value="South Harrow">
+        <option value="South Kensington">
+        <option value="South Kenton">
+        <option value="South Ruislip">
+        <option value="South Wimbledon">
+        <option value="South Woodford">
+        <option value="Southfields">
+        <option value="Southgate">
+        <option value="Southwark">
+        <option value="St. James's Park">
+        <option value="St. John's Wood">
+        <option value="St. Paul's">
+        <option value="Stamford Brook">
+        <option value="Stanmore">
+        <option value="Stepney Green">
+        <option value="Stockwell">
+        <option value="Stonebridge Park">
+        <option value="Stratford">
+        <option value="Sudbury Hill">
+        <option value="Sudbury Town">
+        <option value="Swiss Cottage">
+        <option value="Temple">
+        <option value="Theydon Bois">
+        <option value="Tooting Bec">
+        <option value="Tooting Broadway">
+        <option value="Tottenham Court Road">
+        <option value="Tottenham Hale">
+        <option value="Totteridge & Whetstone">
+        <option value="Tower Hill">
+        <option value="Tufnell Park">
+        <option value="Turnham Green">
+        <option value="Turnpike Lane">
+        <option value="Upminster">
+        <option value="Upminster Bridge">
+        <option value="Upney">
+        <option value="Upton Park">
+        <option value="Uxbridge">
+        <option value="Vauxhall">
+        <option value="Victoria">
+        <option value="Walthamstow Central">
+        <option value="Wanstead">
+        <option value="Warren Street">
+        <option value="Warwick Avenue">
+        <option value="Waterloo">
+        <option value="Watford">
+        <option value="Wembley Central">
+        <option value="Wembley Park">
+        <option value="West Acton">
+        <option value="West Brompton">
+        <option value="West Finchley">
+        <option value="West Ham">
+        <option value="West Hampstead">
+        <option value="West Harrow">
+        <option value="West Kensington">
+        <option value="West Ruislip">
+        <option value="Westbourne Park">
+        <option value="Westminster">
+        <option value="White City">
+        <option value="Whitechapel">
+        <option value="Willesden Green">
+        <option value="Willesden Junction">
+        <option value="Wimbledon">
+        <option value="Wimbledon Park">
+        <option value="Wood Green">
+        <option value="Wood Lane">
+        <option value="Woodford">
+        <option value="Woodside Park">
+        
+    </datalist>
+
+
+
+
+
+            <div class="mb-3">
+                <label for="noOfDepartures" >Please enter how many departures would you like to view:</label>
+                <input 
+                    type="number" 
+                    class="form-control" 
+                    id="noOfDepartures" 
+                    name="noOfDepartures" 
+                    placeholder="e.g. 1"
+                >
+                <datalist id="noOfDepartures">
+                    </option value="1"></option value="2"></option value="3"></option value="4"></option value="5">
+                </datalist>
+            </div>
+
+        <button type="submit" class="badge rounded-pill bg-success">Submit</button><h3>
+    </div>
+    </form>
+
+
+    <img src="{{ url_for('static', filename='images/TFL_TubeMap.jpg') }}"
+     class="img-fluid"
+     alt="TfL Tube Map">
+     
+
+
+    <div class="container text-center mt-5">
+        <!-- Display image -->
+        <img src="TFL_TubeMap.jpg" 
+            class="img-fluid shadow" 
+            alt="TFL Tube Map">
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    </div>
+</body>
+
+</html>

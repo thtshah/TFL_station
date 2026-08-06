@@ -1,0 +1,9 @@
+{% extends 'index.html' %}
+{% block body %}
+<ul>
+    {% for social in sites %}
+    <li>{{ social }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
+

@@ -1,0 +1,103 @@
+/* Override Bootstrap background-colors */
+/*
+.custom-bakerloo {
+    background-color: red !important;
+    color: white !important;
+    font-weight: bold;
+}
+*/
+.custom-bakerloo {
+    background-color: #B36305 !important;
+    color: #E6F1FE !important;
+    font-weight: bold;
+    outline-color:#FFFFFF !important;
+}
+.custom-central {
+    background-color: #E32017 !important;
+    color: #063E41 !important;
+    font-weight: bold;
+    outline-color:#000000 !important;
+}
+.custom-circle {
+    background-color: #FFD300 !important;
+    color: #001475 !important;
+    font-weight: bold;
+    outline-color:#000000 !important;
+}
+.custom-district {
+    background-color: #00782A !important;
+    color: #FFE6F6 !important;
+    font-weight: bold;
+    outline-color:#FFFFFF !important;
+}
+.custom-hammersmith_city {
+    background-color: #F3A9BB !important;
+    color: #093F31 !important;
+    font-weight: bold;
+    outline-color:#000000 !important;
+}
+.custom-jubilee {
+    background-color: #6A7278 !important;
+    color: #FFFFFF !important;
+    font-weight: bold;
+    outline-color:#FFFFFF !important;
+}
+.custom-metropolitan {
+    background-color: #9B0056 !important;
+    color: #8AFFBE !important;
+    font-weight: bold;
+    outline-color:#FFFFFF !important;
+}
+.custom-northern {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+    font-weight: bold;
+}
+.custom-piccadilly_TFLRail {
+    background-color: #0019A8 !important;
+    color: #FFF4B8 !important;
+    font-weight: bold;
+    outline-color:#FFFFFF !important;
+}
+.custom-victoria {
+    background-color: #00A0E2 !important;
+    color: #471500 !important;
+    font-weight: bold;
+    outline-color:#FFFFFF !important;
+}
+.custom-waterloo_city {
+    background-color: #9B0056 !important;
+    color: #E6FFF1 !important;
+    font-weight: bold;
+    outline-color:#FFFFFF !important;
+}
+.custom-elizabeth {
+    background-color: #6950A1 !important;
+    color: #E0E7CF !important;
+    font-weight: bold;
+    outline-color:#FFFFFF !important;
+}
+.custom-overground {
+    background-color: #E86A10 !important;
+    color: #052943 !important;
+    font-weight: bold;
+    outline-color:#FFFFFF !important;
+}
+.custom-dlr {
+    background-color: #00A4A7 !important;
+    color: #FFE6E6 !important;
+    font-weight: bold;
+    outline-color:#FFFFFF !important;
+}
+.custom-tramlink {
+    background-color: #84B817 !important;
+    color: #2A0D68 !important;
+    font-weight: bold;
+    outline-color:#000000 !important;
+}
+.custom-superloop {
+    background-color: #FF6A00 !important;
+    color: #002A47 !important;
+    font-weight: bold;
+    outline-color:#000000 !important;
+}
