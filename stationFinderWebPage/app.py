@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request, render_template
 import requests
 from flask_bootstrap import Bootstrap5
-import sys
 app = Flask(__name__)
 print("heloo")
 
