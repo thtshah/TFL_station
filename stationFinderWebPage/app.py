@@ -1,10 +1,10 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, request, render_template
 import requests
-from flask_bootstrap import Bootstrap5
+#from flask_bootstrap import Bootstrap5
 app = Flask(__name__)
 print("heloo")
 
-bootstrap = Bootstrap5(app)
+#bootstrap = Bootstrap5(app)
 @app.route('/')
 def index():
    return '<h1 class="text-primary">Hello, Bootstrap!</h1>'

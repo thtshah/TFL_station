@@ -5,7 +5,38 @@
     color: white !important;
     font-weight: bold;
 }
+
+north - blue
+east - yellow
+south - red
+west - green
 */
+.custom-north {
+    background-color: #C2FFFF !important;
+    color: #000000 !important;
+    font-weight: bold;
+    outline-color:#FFFFFF !important;
+}
+.custom-south {
+    background-color: #FFC2C2 !important;
+    color: #000000 !important;
+    font-weight: bold;
+    outline-color:#FFFFFF !important;
+}
+.custom-east {
+    background-color: #FFFEC2 !important;
+    color: #000000 !important;
+    font-weight: bold;
+    outline-color:#FFFFFF !important;
+}
+.custom-west {
+    background-color: #E2FFC2 !important;
+    color: #000000 !important;
+    font-weight: bold;
+    outline-color:#FFFFFF !important;
+}
+
+
 .custom-bakerloo {
     background-color: #B36305 !important;
     color: #E6F1FE !important;
