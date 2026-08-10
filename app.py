@@ -23,7 +23,7 @@ def departures():
     station=request.form.get("stationName")
     station=station.strip(' ')
     if station == "":
-        return render_template("errorPage.html")
+        return render_template("errorPage.html", response_status_code=404)
     else:
         
         station=station+"Underground"
@@ -33,7 +33,7 @@ def departures():
         noOfDepartures = request.form.get("noOfDepartures")
         noOfDepartures=noOfDepartures.strip(" ")
         if noOfDepartures == "":
-            return render_template("errorPage.html")
+            return render_template("errorPage.html", response_status_code=404)
         else:
             noOfDepartures=abs(int(noOfDepartures))
             results=parseResult(departures, noOfDepartures)
