@@ -12,21 +12,31 @@
     <div class="mx-auto" style="width: 500px;">
         <p class="text-break" >An error has occured, please press on the button below to return to the home page.</p>
         
-        <a href="{{ url_for('home')}}">
+        <a href="/home">
         <button type="button" class="btn btn-primary btn-lg">Return to home</button>
         </a>
 
     </div>
 
-    {% if response_status_code == 404 %}
-    <img src="{{ url_for('static', filename='images/error_page2.jpg') }}"
-         class="img-fluid"
-         alt="Error page 2">
-    {% else %}
-    <img src="{{ url_for('static', filename='images/error_page1.jpg') }}"
-         class="img-fluid"
-         alt="Error page 1">
-    {% endif %}
+    <script type="text/javascript">
+        if (response.status_code == 404) {
+            <html>
+                <img src="/static/images/error_page2.jpg"
+                    class="img-fluid"
+                    alt="error_page2.jpg">
+                </img>
+            </html>
+        }
+
+        else {
+            <html>
+                <img src="/static/images/error_page1.jpg"
+                    class="img-fluid"
+                    alt="error_page1.jpg">
+                </img>
+            </html>
+        }
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
