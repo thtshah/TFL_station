@@ -82,7 +82,7 @@ def stopPointId_search(station):
         else:
             if response.status_code==401 or 403 or 404 or 500 or 503:
                 print('Error:', response.status_code)
-                return render_template("errorPage.html"), None
+                return render_template("errorPage.html", response_status_code=response.status_code), None
 
             else:
                 print('Error:', response.status_code)
@@ -90,7 +90,7 @@ def stopPointId_search(station):
         
     except requests.exceptions.RequestException as e:
         print('Error:', e)
-        return render_template("errorPage.html")
+        return render_template("errorPage.html", response_status_code=500), None
         return None
 
 def get_departure(id):
@@ -114,12 +114,12 @@ def get_departure(id):
         else:
             if response.status_code==401 or 403 or 404 or 500 or 503:
                 print('Error:', response.status_code)
-                return render_template("errorPage.html"), None
+                return render_template("errorPage.html", response_status_code = response.status_code), None
             
     except requests.exceptions.RequestException as e:
         # Handle any network-related errors or exceptions
         print('Error:', e)
-        return render_template("errorPage.html"), None
+        return render_template("errorPage.html", response_status_code = 500), None
         return None
 
 def parseResult(departures, noOfDepartures):
