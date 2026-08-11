@@ -13,16 +13,27 @@
         <p class="text-break" >An error has occured, please press on the button below to return to the home page.</p>
         
         <a href="{{ url_for('home')}}">
-        <button type="button" class="btn btn-primary btn-lg">Return to home</button>
+        
+        </a>
+
+        <a href="{{ url_for('loginOptions2')}}">
+        <button type="button" class="btn btn-primary btn-lg">Return to login page</button>
         </a>
 
     </div>
 
     {% if response_status_code == 404 %}
+    
+    <button type="button" class="btn btn-primary btn-lg">Return to home</button>
     <img src="{{ url_for('static', filename='images/error_page2.jpg') }}"
          class="img-fluid"
          alt="Error page 2">
+     {% elif page == login %}
+    <img src="{{ url_for('static', filename='images/error_page3.jpg') }}"
+         class="img-fluid"
+         alt="Error page 3">
     {% else %}
+    <button type="button" class="btn btn-primary btn-lg">Return to home</button>
     <img src="{{ url_for('static', filename='images/error_page1.jpg') }}"
          class="img-fluid"
          alt="Error page 1">
