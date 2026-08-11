@@ -1,18 +1,72 @@
+import os
+
 from flask import Flask, request, render_template
 import requests
 #from flask_bootstrap import Bootstrap5
 app = Flask(__name__)
 print("heloo")
 
-#bootstrap = Bootstrap5(app)
+
 @app.route('/')
-def index():
-   return '<h1 class="text-primary">Hello, Bootstrap!</h1>'
+def loginOptions():
+   return render_template("loginOptions.html")
+
+@app.route('/loginchoices')
+def loginOptions2():
+   return render_template("loginOptions.html")
+
+#CHECKS FOR USER'S USERNAME AND EMAIL IN DATABASE
+#IF EITHER IS THERE, USER IS SENT TO FINDSTATION PAGE
+@app.route('/login', methods=['GET'])
+def login():
+    return render_template("userLogin.html")
+
+@app.route('/accountManagement', methods=['POST'])
+def accountManagement():
+    username_or_email=request.form.get("username_or_email")
+    password=request.form.get("password")
+    file = open("database.txt", "r")
+    content = file.read()
+    file.close()
+    if username_or_email==None or password==None:
+        return render_template("errorPage.html")
+    elif (username_or_email+" - "+password) in content:
+        return render_template("findStation.html")
+    else:
+        return render_template("userLogin.html")
+
+#ADDS NEW USER'S USERNAME AND EMAIL INTO DATABASE
+@app.route('/signup', methods=['GET'])
+def signup():
+    return render_template("userSignUp.html")
+
+@app.route('/addAccount', methods=['POST'])
+def addAccount():
+    file = open("database.txt", "r")
+    content = file.read()
+    file = open("database.txt", "a")
+    username=request.form.get("username")
+    userEmail=request.form.get("userEmail")
+    password=request.form.get("password")
+    passwordcheck=request.form.get("passwordcheck")
+    if username==None or userEmail==None:
+        file.close()
+        return render_template("userSignUp.html")
+    elif username in content:
+        file.close()
+        return render_template("userLogin.html")
+    elif password != passwordcheck:
+        return render_template("userSignUp.html", password=password, passwordcheck=passwordcheck)
+    else:
+        file.write("\n"+username+" - "+password)
+        file.write("\n"+userEmail+" - "+password)
+        file.write("\n    ")
+        file.close()
+        return render_template("userLogin.html")
+
+    
 
 
-@app.route("/index")
-def index2():
-    return render_template("index.html")
 
 @app.route('/error', methods=['GET', 'POST'])
 def error():
@@ -63,7 +117,12 @@ def departures():
 
 @app.route('/home', methods=['GET', 'POST'])
 def home():
-    return render_template("findStation.html", image_file="TFL_TubeMap.jpg")
+    username=request.form.get("username")
+    userEmail=request.form.get("userEmail")
+    if username=="" and userEmail=="":
+        return render_template("userLogin.html")
+    else:
+        return render_template("findStation.html", image_file="TFL_TubeMap.jpg")
 
 def stopPointId_search(station):
     url = 'https://api.tfl.gov.uk/StopPoint/Search/'+str(station)
@@ -120,7 +179,6 @@ def get_departure(id):
         # Handle any network-related errors or exceptions
         print('Error:', e)
         return render_template("errorPage.html", response_status_code = 500), None
-        return None
 
 def parseResult(departures, noOfDepartures):
     try:
@@ -130,6 +188,7 @@ def parseResult(departures, noOfDepartures):
             tubeLine=departures[i]['lineName']
             platform=departures[i]['platformName']
             timeUntilDeparture=str(int(departures[i]['timeToStation'])//60)
+            
 
             for data in departures[i]:
                 if 'destinationName' in departures[i]:
@@ -145,6 +204,9 @@ def parseResult(departures, noOfDepartures):
             else:
                 trainInfo.append({'station':station, 'tubeLine':tubeLine, 'platform':platform,'destination':destination, 'timeUntilDeparture':timeUntilDeparture})
 
+            if departures[i] == departures[-1]:
+                break
+
         trainInfo.sort(key=lambda train: int(train["timeUntilDeparture"]))
         return trainInfo
     
@@ -155,4 +217,4 @@ def parseResult(departures, noOfDepartures):
             return render_template("errorPage.html"), None
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8003)
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
