@@ -22,12 +22,12 @@
         <form action="{{ url_for('accountManagement') }}" method="post">
             <div> 
                 <label for="username_or_email" class="form-label">Please enter your username or email:</label>
-                <input name="username_or_email" class="form-control" id="username_or_email" placeholder="Username or example@example.com">
+                <input name="username_or_email" class="form-control" id="username_or_email" placeholder="Username or example@example.com" required>
             </div>
 
             <div> 
                 <label for="password" class="form-label">Please enter your password:</label>
-                <input name=password class="form-control" id="password" placeholder="Password">
+                <input name=password class="form-control" id="password" placeholder="Password" required>
             </div>
             
             <p> </p>
