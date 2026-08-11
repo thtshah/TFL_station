@@ -28,9 +28,10 @@ def accountManagement():
     file = open("database.txt", "r")
     content = file.read()
     file.close()
+    usernamePassword=username_or_email+" - "+password
     if username_or_email==None or password==None:
         return render_template("errorPage.html")
-    elif (username_or_email+" - "+password) in content:
+    elif usernamePassword in content:
         return render_template("findStation.html")
     else:
         return render_template("userLogin.html")
