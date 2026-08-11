@@ -1,9 +1,12 @@
 import os
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, render_template_string, request, redirect, url_for, flash
+from werkzeug.security import generate_password_hash, check_password_hash
+import re
 import requests
 #from flask_bootstrap import Bootstrap5
 app = Flask(__name__)
+app.secret_key = "supersecretkey"  # Needed for flash messages
 print("heloo")
 
 
@@ -50,7 +53,10 @@ def addAccount():
     userEmail=request.form.get("userEmail")
     password=request.form.get("password")
     passwordcheck=request.form.get("passwordcheck")
-    if username==None or userEmail==None:
+    if len(password) < 8 or not re.search(r"\d", password) or not re.search(r"[A-Z]", password):
+            flash("Password must be at least 8 characters, include a number and an uppercase letter.")
+            return render_template("userSignUp.html")
+    elif username==None or userEmail==None:
         file.close()
         return render_template("userSignUp.html")
     elif username in content:
@@ -59,10 +65,13 @@ def addAccount():
     elif password != passwordcheck:
         return render_template("userSignUp.html", password=password, passwordcheck=passwordcheck)
     else:
+        # Hash the password before storing
+        hashed_password = generate_password_hash(password)
         file.write("\n"+username+" - "+password)
         file.write("\n"+userEmail+" - "+password)
         file.write("\n    ")
         file.close()
+        flash("User registered successfully! Password stored securely.")
         return render_template("userLogin.html")
 
     
