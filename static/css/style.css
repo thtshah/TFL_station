@@ -12,27 +12,23 @@ south - red
 west - green
 */
 .custom-north {
-    background-color: #C2FFFF !important;
+    background-color: #E6FFFF !important;
     color: #000000 !important;
-    font-weight: bold;
     outline-color:#FFFFFF !important;
 }
 .custom-south {
-    background-color: #FFC2C2 !important;
+    background-color: #FFE6E6 !important;
     color: #000000 !important;
-    font-weight: bold;
     outline-color:#FFFFFF !important;
 }
 .custom-east {
-    background-color: #FFFEC2 !important;
+    background-color: #FFFFE6 !important;
     color: #000000 !important;
-    font-weight: bold;
     outline-color:#FFFFFF !important;
 }
 .custom-west {
-    background-color: #E2FFC2 !important;
+    background-color: #F3FFE6 !important;
     color: #000000 !important;
-    font-weight: bold;
     outline-color:#FFFFFF !important;
 }
 

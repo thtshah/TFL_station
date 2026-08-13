@@ -1,13 +1,6 @@
 guest - password
 guest@email.com - password
 
-    
-thtshah - abc
-thtshah@gmail.com - abc
-    
-zxc - cxz
-zxc - cxz
-    
-qwe - Banana10
-qwe - Banana10
+asd - Qwerty12
+sad - Qwerty12
     
