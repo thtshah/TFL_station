@@ -5,7 +5,6 @@ from flask import Flask, request, render_template, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 import requests
-import bcrypt
 import mysql.connector
  
 dataBase = mysql.connector.connect(
@@ -85,49 +84,7 @@ def addAccount():
         file.write("\n    ")
         file.close()
         return render_template("userLogin.html")
-'''  
-import bcrypt
 
-def hash_password(plain_password: str) -> bytes:
-    """
-    Hash a plain-text password using bcrypt.
-    Returns the hashed password as bytes.
-    """
-    if not isinstance(plain_password, str) or not plain_password:
-        raise ValueError("Password must be a non-empty string.")
-    
-    # Generate salt and hash
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(plain_password.encode('utf-8'), salt)
-    return hashed
-
-
-def verify_password(plain_password: str, hashed_password: bytes) -> bool:
-    """
-    Verify a plain-text password against a stored bcrypt hash.
-    """
-    if not isinstance(plain_password, str) or not plain_password:
-        raise ValueError("Password must be a non-empty string.")
-    if not isinstance(hashed_password, (bytes, bytearray)):
-        raise ValueError("Hashed password must be bytes.")
-    
-    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password)
-
-# Example usage
-if __name__ == "__main__":
-    try:
-        # Step 1: Hash the password (store this in your DB)
-        stored_hash = hash_password("MySecureP@ssw0rd")
-        print(f"Stored hash: {stored_hash}")
-
-        # Step 2: Verify the password during login
-        if verify_password("MySecureP@ssw0rd", stored_hash):
-            print("✅ Password is correct!")
-        else:
-            print("❌ Invalid password.")
-    except ValueError as e:
-        print(f"Error: {e}")
-'''
 
 
 @app.route('/error', methods=['GET', 'POST'])
