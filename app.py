@@ -1,14 +1,28 @@
 import os
-
-from flask import Flask, request, render_template, render_template_string, request, redirect, url_for, flash
+from datetime import datetime
+from zoneinfo import ZoneInfo
+from flask import Flask, request, render_template, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 import requests
+import bcrypt
+import mysql.connector
+ 
+dataBase = mysql.connector.connect(
+  host ="localhost",
+  user ="root",
+  passwd ="Banana10!",
+  database = "tfl-station-finder-infobase"
+)
+
 #from flask_bootstrap import Bootstrap5
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # Needed for flash messages
 print("heloo")
 
+@app.route('/navbar', methods=['POST'])
+def navbar(username_or_email):
+    return render_template("navbar.html", username=username_or_email)
 
 @app.route('/')
 def loginOptions():
@@ -33,11 +47,11 @@ def accountManagement():
     file.close()
     usernamePassword=username_or_email+" - "+password
     if username_or_email==None or password==None:
-        return render_template("errorPage.html")
+        return render_template("errorPage.html", loginFail=True)
     elif usernamePassword in content:
-        return render_template("findStation.html")
+        return render_template("findStation.html", username_or_email=username_or_email)
     else:
-        return render_template("userLogin.html")
+        return render_template("userLogin.html", loginFail=False)
 
 #ADDS NEW USER'S USERNAME AND EMAIL INTO DATABASE
 @app.route('/signup', methods=['GET'])
@@ -65,17 +79,55 @@ def addAccount():
     elif password != passwordcheck:
         return render_template("userSignUp.html", password=password, passwordcheck=passwordcheck)
     else:
-        # Hash the password before storing
-        hashed_password = generate_password_hash(password)
+        print(password)
         file.write("\n"+username+" - "+password)
         file.write("\n"+userEmail+" - "+password)
         file.write("\n    ")
         file.close()
-        flash("User registered successfully! Password stored securely.")
         return render_template("userLogin.html")
+'''  
+import bcrypt
 
+def hash_password(plain_password: str) -> bytes:
+    """
+    Hash a plain-text password using bcrypt.
+    Returns the hashed password as bytes.
+    """
+    if not isinstance(plain_password, str) or not plain_password:
+        raise ValueError("Password must be a non-empty string.")
     
+    # Generate salt and hash
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(plain_password.encode('utf-8'), salt)
+    return hashed
 
+
+def verify_password(plain_password: str, hashed_password: bytes) -> bool:
+    """
+    Verify a plain-text password against a stored bcrypt hash.
+    """
+    if not isinstance(plain_password, str) or not plain_password:
+        raise ValueError("Password must be a non-empty string.")
+    if not isinstance(hashed_password, (bytes, bytearray)):
+        raise ValueError("Hashed password must be bytes.")
+    
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password)
+
+# Example usage
+if __name__ == "__main__":
+    try:
+        # Step 1: Hash the password (store this in your DB)
+        stored_hash = hash_password("MySecureP@ssw0rd")
+        print(f"Stored hash: {stored_hash}")
+
+        # Step 2: Verify the password during login
+        if verify_password("MySecureP@ssw0rd", stored_hash):
+            print("✅ Password is correct!")
+        else:
+            print("❌ Invalid password.")
+    except ValueError as e:
+        print(f"Error: {e}")
+'''
 
 
 @app.route('/error', methods=['GET', 'POST'])
@@ -120,8 +172,7 @@ def departures():
                 "Tramlink": "custom-tramlink",
                 "Superloop": "custom-superloop"
             }
-
-            return render_template("hello.html",results=results,line_classes=line_classes)
+            return render_template("results.html",results=results,line_classes=line_classes)
 
 
 
@@ -197,8 +248,19 @@ def parseResult(departures, noOfDepartures):
             station=departures[i]['stationName']
             tubeLine=departures[i]['lineName']
             platform=departures[i]['platformName']
+            currentlocation=departures[i]['currentLocation']
             timeUntilDeparture=str(int(departures[i]['timeToStation'])//60)
-            
+
+
+            expectedArrivalInUTC=departures[i]['expectedArrival']
+
+            timestamp = expectedArrivalInUTC
+
+            dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+
+            london_time = dt.astimezone(ZoneInfo("Europe/London"))
+
+            expectedArrival=(london_time.strftime("%H:%M.%S"))
 
             for data in departures[i]:
                 if 'destinationName' in departures[i]:
@@ -212,7 +274,7 @@ def parseResult(departures, noOfDepartures):
                 return render_template("errorPage.html"), None
 
             else:
-                trainInfo.append({'station':station, 'tubeLine':tubeLine, 'platform':platform,'destination':destination, 'timeUntilDeparture':timeUntilDeparture})
+                trainInfo.append({'station':station, 'tubeLine':tubeLine, 'platform':platform,'destination':destination, 'currentLocation':currentlocation, 'timeUntilDeparture':timeUntilDeparture, 'expectedArrival':expectedArrival})
 
             if departures[i] == departures[-1]:
                 break
