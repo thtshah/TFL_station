@@ -1,6 +1,2 @@
 guest - password
 guest@email.com - password
-
-asd - Qwerty12
-sad - Qwerty12
-    

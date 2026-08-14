@@ -19,9 +19,9 @@ app = Flask(__name__)
 app.secret_key = "supersecretkey"  # Needed for flash messages
 print("heloo")
 
-@app.route('/navbar', methods=['POST'])
-def navbar(username_or_email):
-    return render_template("navbar.html", username=username_or_email)
+@app.route('/navbar')
+def navbar():
+    return render_template("navbar.html")
 
 @app.route('/')
 def loginOptions():
