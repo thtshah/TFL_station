@@ -5,14 +5,6 @@ from flask import Flask, request, render_template, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 import requests
-import mysql.connector
- 
-dataBase = mysql.connector.connect(
-  host ="localhost",
-  user ="root",
-  passwd ="Banana10!",
-  database = "tfl-station-finder-infobase"
-)
 
 #from flask_bootstrap import Bootstrap5
 app = Flask(__name__)
