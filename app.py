@@ -2,7 +2,6 @@ import os
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from flask import Flask, request, render_template, request, flash
-from werkzeug.security import generate_password_hash, check_password_hash
 import re
 import requests
 
