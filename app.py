@@ -4,11 +4,30 @@ from zoneinfo import ZoneInfo
 from flask import Flask, request, render_template, request, flash
 import re
 import requests
+import mysql.connector
+from mysql.connector import Error
 
 #from flask_bootstrap import Bootstrap5
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # Needed for flash messages
 print("heloo")
+
+def get_db_connection():
+    """Create and return a MySQL database connection."""
+    try:
+        conn = mysql.connector.connect(
+            host='localhost',
+            user='root',
+            password='Banana10!',
+            database='tfl-station-finder-infobase'
+        )
+
+        if conn.is_connected():
+            return conn
+    except Error as e:
+        print(f"Database connection error: {e}")
+    return None, render_template("errorPage.html", loginFail=True)
+
 
 @app.route('/navbar')
 def navbar():
@@ -22,6 +41,86 @@ def loginOptions():
 def loginOptions2():
    return render_template("loginOptions.html")
 
+
+
+#ADDS NEW USER'S USERNAME AND EMAIL INTO DATABASE
+@app.route('/signup', methods=['GET'])
+def signup():
+    return render_template("userSignUp.html")
+
+@app.route('/addAccount', methods=['POST'])
+def addAccount():
+    '''
+    #USING A TXT FILE INSTEAD OF MYSQL DATABASE
+    file = open("database.txt", "r")
+    content = file.read()
+    file = open("database.txt", "a")
+    
+    username=request.form.get("username")
+    userEmail=request.form.get("userEmail")
+    password=request.form.get("password")
+    passwordcheck=request.form.get("passwordcheck")
+    if len(password) < 8 or not re.search(r"\d", password) or not re.search(r"[A-Z]", password):
+            flash("Password must be at least 8 characters, include a number and an uppercase letter.")
+            return render_template("userSignUp.html")
+    elif username==None or userEmail==None:
+        #file.close()
+        return render_template("userSignUp.html")
+    elif username in content:
+        #file.close()
+        return render_template("userLogin.html")
+    elif password != passwordcheck:
+        return render_template("userSignUp.html", password=password, passwordcheck=passwordcheck)
+    else:
+        cursor = mysql.connection.cursor()
+        cursor.execute("INSERT INTO usernameinfo(username, email, password) VALUES(%s, %s, %s)", (username, userEmail, password))
+        mysql.connection.commit()
+        cursor.close()
+        file.write("\n"+username+" - "+password)
+        file.write("\n"+userEmail+" - "+password)
+        file.write("\n    ")
+        file.close()
+        return render_template("userLogin.html")
+    '''
+    username=request.form.get("username")
+    userEmail=request.form.get("userEmail")
+    password=request.form.get("password")
+    passwordcheck=request.form.get("passwordcheck")
+
+    if username==None or userEmail==None or password==None or passwordcheck==None:
+        return render_template("userSignUp.html")
+    
+    elif len(password) < 8 or not re.search(r"\d", password) or not re.search(r"[A-Z]", password):
+            flash("Password must be at least 8 characters, include a number and an uppercase letter.")
+            return render_template("userSignUp.html")
+    
+    elif password != passwordcheck:
+        return render_template("userSignUp.html", password=password, passwordcheck=passwordcheck)
+
+    
+    conn = get_db_connection()
+    if not conn:
+        return "Error: Could not connect to the database.", render_template("errorPage.html", loginFail=True)
+
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT id, username, email FROM usernameinfo WHERE username = %s AND email = %s", (username, userEmail))
+        user = cursor.fetchone()
+    except Error as e:
+        return f"Database query error: {e}", render_template("errorPage.html", loginFail=True)
+
+    if not user:
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO usernameinfo(username, email, password) VALUES(%s, %s, %s)", (username, userEmail, password))
+        conn.commit()
+        cursor.close()
+        return render_template("userLogin.html")
+        
+    else:
+        cursor.close()
+        return render_template("userLogin.html")
+
+
 #CHECKS FOR USER'S USERNAME AND EMAIL IN DATABASE
 #IF EITHER IS THERE, USER IS SENT TO FINDSTATION PAGE
 @app.route('/login', methods=['GET'])
@@ -32,9 +131,33 @@ def login():
 def accountManagement():
     username_or_email=request.form.get("username_or_email")
     password=request.form.get("password")
+
+    conn = get_db_connection()
+    if not conn:
+        return "Error: Could not connect to the database.", render_template("errorPage.html", loginFail=True)
+
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT id, username, email, password FROM usernameinfo WHERE (username = %s OR email = %s) AND password = %s", (username_or_email, username_or_email, password))
+        user = cursor.fetchone()
+    except Error as e:
+        return f"Database query error: {e}", render_template("errorPage.html", loginFail=True)
+    finally:
+        conn.close()
+
+    if not user:
+        cursor.close()
+        return render_template("userLogin.html", loginFail=True)
+        
+    else:
+        cursor.close()
+        return render_template("findStation.html")
+    '''
+    #USING A TXT FILE INSTEAD OF MYSQL DATABASE
     file = open("database.txt", "r")
     content = file.read()
     file.close()
+
     usernamePassword=username_or_email+" - "+password
     if username_or_email==None or password==None:
         return render_template("errorPage.html", loginFail=True)
@@ -42,40 +165,7 @@ def accountManagement():
         return render_template("findStation.html", username_or_email=username_or_email)
     else:
         return render_template("userLogin.html", loginFail=False)
-
-#ADDS NEW USER'S USERNAME AND EMAIL INTO DATABASE
-@app.route('/signup', methods=['GET'])
-def signup():
-    return render_template("userSignUp.html")
-
-@app.route('/addAccount', methods=['POST'])
-def addAccount():
-    file = open("database.txt", "r")
-    content = file.read()
-    file = open("database.txt", "a")
-    username=request.form.get("username")
-    userEmail=request.form.get("userEmail")
-    password=request.form.get("password")
-    passwordcheck=request.form.get("passwordcheck")
-    if len(password) < 8 or not re.search(r"\d", password) or not re.search(r"[A-Z]", password):
-            flash("Password must be at least 8 characters, include a number and an uppercase letter.")
-            return render_template("userSignUp.html")
-    elif username==None or userEmail==None:
-        file.close()
-        return render_template("userSignUp.html")
-    elif username in content:
-        file.close()
-        return render_template("userLogin.html")
-    elif password != passwordcheck:
-        return render_template("userSignUp.html", password=password, passwordcheck=passwordcheck)
-    else:
-        print(password)
-        file.write("\n"+username+" - "+password)
-        file.write("\n"+userEmail+" - "+password)
-        file.write("\n    ")
-        file.close()
-        return render_template("userLogin.html")
-
+    '''
 
 
 @app.route('/error', methods=['GET', 'POST'])
