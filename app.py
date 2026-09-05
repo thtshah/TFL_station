@@ -90,11 +90,12 @@ def addAccount():
     if username==None or userEmail==None or password==None or passwordcheck==None:
         return render_template("userSignUp.html")
     
-    elif len(password) < 8 or not re.search(r"\d", password) or not re.search(r"[A-Z]", password):
+    elif len(password) < 8 or not re.search(r"[0-9]", password) or not re.search(r"[A-Z]", password):
             flash("Password must be at least 8 characters, include a number and an uppercase letter.")
             return render_template("userSignUp.html")
     
     elif password != passwordcheck:
+        flash("Please make sure that your passwords match.")
         return render_template("userSignUp.html", password=password, passwordcheck=passwordcheck)
 
     
@@ -117,7 +118,7 @@ def addAccount():
         return render_template("userLogin.html")
         
     else:
-        cursor.close()
+        flash("This account already exists, please log in.")
         return render_template("userLogin.html")
 
 
@@ -129,6 +130,7 @@ def login():
 
 @app.route('/accountManagement', methods=['POST'])
 def accountManagement():
+    loginFail=False
     username_or_email=request.form.get("username_or_email")
     password=request.form.get("password")
 
@@ -147,6 +149,7 @@ def accountManagement():
 
     if not user:
         cursor.close()
+        flash("Username or password is incorrect. Please try again.")
         return render_template("userLogin.html", loginFail=True)
         
     else:
@@ -189,6 +192,7 @@ def departures():
         if noOfDepartures == "":
             return render_template("errorPage.html", response_status_code=404)
         else:
+            delays=traindelaysfinder()
             noOfDepartures=abs(int(noOfDepartures))
             results=parseResult(departures, noOfDepartures)
             line_classes = {
@@ -210,7 +214,7 @@ def departures():
                 "Tramlink": "custom-tramlink",
                 "Superloop": "custom-superloop"
             }
-            return render_template("results.html",results=results,line_classes=line_classes)
+            return render_template("results.html",results=results,line_classes=line_classes, delays=delays)
 
 
 
@@ -222,6 +226,66 @@ def home():
         return render_template("userLogin.html")
     else:
         return render_template("findStation.html", image_file="TFL_TubeMap.jpg")
+
+
+
+@app.route('/traindelays', methods=['GET'])
+def traindelays():
+    delays = traindelaysfinder()
+    if delays is None:
+        return render_template("traindelays.html", delays=None)
+    else:
+        line_classes = {
+                        "Bakerloo": "custom-bakerloo",
+                        "Central": "custom-central",
+                        "Circle": "custom-circle",
+                        "District": "custom-district",
+                        "Hammersmith & City": "custom-hammersmith_city",
+                        "Jubilee": "custom-jubilee",
+                        "Metropolitan": "custom-metropolitan",
+                        "Northern": "custom-northern",
+                        "Piccadilly": "custom-piccadilly_TFLRail",
+                        "TFL Rail": "custom-piccadilly_TFLRail",
+                        "Victoria": "custom-victoria",
+                        "Waterloo & City": "custom-waterloo_city",
+                        "Elizabeth": "custom-elizabeth",
+                        "London Overground": "custom-overground",
+                        "DLR": "custom-dlr",
+                        "Tramlink": "custom-tramlink",
+                        "Superloop": "custom-superloop"
+                    }
+        return render_template("traindelays.html", delays=delays, line_classes=line_classes)
+
+
+def traindelaysfinder():
+    url = 'https://api.tfl.gov.uk/Line/Mode/tube/Status?detail=true&app_id=DbProject&app_key=afc7bf1d95b448588b28c712b6ed4ad8'
+
+    try:
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            jsonResponse = response.json()
+            delays=[]
+            for line in jsonResponse:
+                if line['lineStatuses'][0]['statusSeverity'] != 10:
+                    delays.append({'lineName':line['name'], 'statusSeverityDescription':line['lineStatuses'][0]['statusSeverityDescription'], 'reason':line['lineStatuses'][0]['reason']})
+            return delays
+
+        else:
+            if response.status_code==401 or 403 or 404 or 500 or 503:
+                print('Error:', response.status_code)
+                return render_template("errorPage.html", response_status_code=response.status_code), None
+
+            else:
+                print('Error:', response.status_code)
+                return None
+        
+    except requests.exceptions.RequestException as e:
+        print('Error:', e)
+        return render_template("errorPage.html", response_status_code=500), None
+        return None
+
+
 
 def stopPointId_search(station):
     url = 'https://api.tfl.gov.uk/StopPoint/Search/'+str(station)
@@ -282,6 +346,7 @@ def get_departure(id):
 def parseResult(departures, noOfDepartures):
     try:
         trainInfo=[]
+        lineList=[]
         for i in range (noOfDepartures):  
             station=departures[i]['stationName']
             tubeLine=departures[i]['lineName']
@@ -313,6 +378,7 @@ def parseResult(departures, noOfDepartures):
 
             else:
                 trainInfo.append({'station':station, 'tubeLine':tubeLine, 'platform':platform,'destination':destination, 'currentLocation':currentlocation, 'timeUntilDeparture':timeUntilDeparture, 'expectedArrival':expectedArrival})
+                
 
             if departures[i] == departures[-1]:
                 break

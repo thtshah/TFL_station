@@ -18,6 +18,7 @@
         <a class="nav-link" href="{{ url_for('loginOptions')}}">Home</a>
         <a class="nav-link" href="{{ url_for('login')}}">Login</a>
         <a class="nav-link" href="{{ url_for('signup')}}">Sign Up</a>
+        <a class="nav-link" href="{{ url_for('traindelays')}}">Train Status</a>
       </div>
     </div>
   </div>
@@ -25,11 +26,22 @@
 
     <title>TFL - Next train leaving:</title>
 </head>
+
+
 <body>
 <div class="container-fluid">
   {% if departure=="" %}
     <p>There are no trains leaving from this station at the moment, please try again later or enter a different station.</p>
   {% else %}
+
+{% for result in delays %}
+    {% if result.lineName in departure %}
+        <p class="text-danger">
+            There are {{ result.statusSeverityDescription }} on the {{ result.lineName }} line.
+        </p>
+    {% endif %}
+{% endfor %}
+
     <m-3>
     <table class="table table-striped">
     <thead>

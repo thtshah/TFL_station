@@ -1,2 +1,5 @@
 {
+    "github.copilot.chat.claudeAgent.enabled": false,
+    "github.copilot.nextEditSuggestions.enabled": false,
+    "github.copilot.nextEditSuggestions.extendedRange": false
 }

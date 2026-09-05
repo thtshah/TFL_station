@@ -23,6 +23,7 @@
         <a class="nav-link" href="{{ url_for('loginOptions')}}">Home</a>
         <a class="nav-link" href="{{ url_for('login')}}">Login</a>
         <a class="nav-link" href="{{ url_for('signup')}}">Sign Up</a>
+        <a class="nav-link" href="{{ url_for('traindelays')}}">Train Status</a>
       </div>
     </div>
   </div>
@@ -50,7 +51,7 @@
             
             <p> </p>
             
-            {% if login==False %}
+            {% if loginFail==True %}
             <p class="text-danger"> 
                 !!! USERNAME OR PASSWORD IS WRONG !!! 
                 Please try again. </p>
