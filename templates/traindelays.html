@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 
-
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+    
+      <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
   <div class="container-fluid">
     <a class="navbar-brand" href="{{ url_for('home')}}">
   <img src="{{ url_for('static', filename='images/tfl_logo.jpg') }}" alt="" width="80" height="30" class="d-inline-block align-text-top">
@@ -23,12 +23,44 @@
     </div>
   </div>
 </nav>
+
+    <title>TFL - Train Status:</title>
 </head>
+<body>
+<div class="container-fluid">
+{% if delays==None %}
+    <p>Service on all lines are currently good.</p>
+{% else %}
+    <m-3>
+    <table class="table table-striped">
+    <thead>
+        <tr>
+        <th scope="col">Tube Line</th>
+        <th scope="col">Delay Status</th>
+        <th scope="col">Reason</th>
+        </tr>
+    </thead>
 
+    {% for result in delays %}
+    <tbody>
+        <tr>
+        <td class="{{ line_classes.get(result.lineName, '') }}">{{ result.lineName }}</td>
+        <td>{{ result.statusSeverityDescription }}</td>
+        <td>{{ result.reason }}</td>
 
-
-
-
+        </tr>
+    {% endfor %} 
     
+    </tbody>
+    </table>
+{% endif %}
+
+<a href="{{ url_for('home')}}">
+        <button type="button" class="btn btn-primary btn-lg">Go to Station Finder</button>
+        </a>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+</body>
+
 </html>
